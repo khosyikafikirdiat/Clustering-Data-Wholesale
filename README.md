@@ -24,6 +24,7 @@ Membantu perusahaan mengidentifikasi segmen pelanggan untuk menyusun strategi pe
 MIT License
 
 
+
 # Penjelasan Kode Program - Clustering K-Means pada Dataset Wholesale Customers
 
 Disini kita akan membangun model clustering menggunakan metode **K-Means** pada dataset *Wholesale customers data*. Masalah yang ditemui adalah bagaimana cara mengelompokkan pelanggan grosir berdasarkan pola pembelian mereka agar perusahaan dapat menyusun strategi pemasaran yang lebih tepat sasaran? Berikut merupakan langkah-langkahnya:
@@ -105,3 +106,76 @@ def min_max_scale(data):
 ```
 Langkah ini sangat penting dalam K-Means karena algoritma ini sensitif terhadap skala data.  
 **(Tingkat kepercayaan: 100%)**
+
+## Implementasi K-Means Clustering
+Setelah preprocessing selesai, kita melanjutkan ke tahap utama yaitu penerapan algoritma **K-Means**. Di sini kita menggunakan pustaka `sklearn.cluster.KMeans`.
+
+```python
+from sklearn.cluster import KMeans
+
+kmeans = KMeans(n_clusters=3, random_state=42)
+kmeans.fit(normalized_data)
+```
+
+Kita memilih `n_clusters=3` sebagai jumlah klaster awal. Proses fitting dilakukan terhadap data yang telah dinormalisasi.  
+**(Tingkat kepercayaan: 100%)**
+
+---
+
+## Menampilkan Label dan Pusat Klaster
+Setelah model dilatih, kita dapat menampilkan **label** hasil clustering dan **pusat klaster**.
+
+```python
+print(kmeans.labels_)
+print(kmeans.cluster_centers_)
+```
+
+Label digunakan untuk mengelompokkan masing-masing data ke dalam klaster tertentu, sedangkan pusat klaster menunjukkan koordinat dari masing-masing klaster di ruang fitur.  
+**(Tingkat kepercayaan: 100%)**
+
+---
+
+## Visualisasi Hasil Clustering
+Untuk memvisualisasikan hasil clustering, digunakan PCA (Principal Component Analysis) untuk mereduksi dimensi dari 6D ke 2D.
+
+```python
+from sklearn.decomposition import PCA
+...
+```
+
+Visualisasi ini memudahkan dalam melihat pola klaster meskipun ada informasi yang hilang karena reduksi dimensi. Warna berbeda menunjukkan anggota dari klaster yang berbeda.  
+**(Tingkat kepercayaan: 100%)**
+
+---
+
+## Menentukan Jumlah Klaster Optimal (Metode Elbow)
+Untuk menentukan jumlah klaster yang paling optimal, digunakan **metode Elbow** yang memplot jumlah klaster terhadap inertia (total jarak dari data ke pusat klaster masing-masing).
+
+```python
+inertia = []
+for k in range(1, 11):
+    km = KMeans(n_clusters=k, random_state=42)
+    km.fit(normalized_data)
+    inertia.append(km.inertia_)
+```
+
+Grafik Elbow akan menunjukkan titik tekukan yang menandakan jumlah klaster optimal (biasanya nilai `k` sebelum perubahan inertia menjadi datar).  
+**(Tingkat kepercayaan: 100%)**
+
+---
+
+## Interpretasi Klaster
+Setelah jumlah klaster dipilih, dilakukan **analisis rata-rata** tiap fitur per klaster untuk interpretasi.
+
+```python
+import numpy as np
+clusters = kmeans.labels_
+data_array = np.array(data)
+for i in range(3):
+    print(f"Klaster {i}:")
+    print(np.mean(data_array[clusters == i], axis=0))
+```
+
+Hasil ini membantu memahami karakteristik tiap klaster, misalnya klaster 0 mungkin adalah pelanggan dengan pembelian tinggi pada Grocery dan Detergents_Paper.  
+**(Tingkat kepercayaan: 100%)**
+
