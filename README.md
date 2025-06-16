@@ -37,7 +37,7 @@ def load_data(filename):
     ...
 ```
 Setelah data dimuat, akan ditampilkan jumlah baris dan jumlah fitur per baris. Diketahui terdapat **440 baris** data dengan **6 fitur** numerik yaitu: Fresh, Milk, Grocery, Frozen, Detergents_Paper, dan Delicassen.  
-**(Tingkat kepercayaan: 100%)**
+
 
 ## Statistik Deskriptif
 Langkah selanjutnya adalah melakukan **statistika deskriptif** terhadap setiap fitur. Kami menghitung nilai minimum, maksimum, rata-rata (mean), dan standar deviasi dari masing-masing fitur untuk memahami penyebaran nilai-nilai dalam data.
@@ -47,7 +47,7 @@ def describe_statistics(data, labels):
     ...
 ```
 Ini penting untuk mengetahui seberapa besar variasi antar fitur dan melihat adanya kemungkinan outlier. Misalnya, fitur `Fresh` memiliki nilai maksimum lebih dari 100 ribu, yang jauh lebih tinggi dari rata-ratanya.  
-**(Tingkat kepercayaan: 100%)**
+
 
 ## Cek Missing Values
 Kemudian dilakukan pengecekan terhadap **missing value**. Kami menggunakan `pandas` untuk memuat data dan menjalankan fungsi `.isnull().sum()` guna memastikan bahwa tidak ada nilai kosong dalam dataset.
@@ -57,7 +57,7 @@ df = pd.read_csv(...)
 df.isnull().sum()
 ```
 Hasilnya menunjukkan **tidak ada missing value** dalam dataset ini, sehingga tidak perlu dilakukan imputasi atau penghapusan data.  
-**(Tingkat kepercayaan: 100%)**
+
 
 ## Deteksi Outlier dengan Z-Score
 Selanjutnya, kami melakukan **deteksi outlier** menggunakan metode **Z-Score**. Nilai dianggap outlier jika berada lebih dari 3 standar deviasi dari rata-rata.
@@ -67,7 +67,7 @@ def detect_outliers_zscore(data, threshold=3):
     ...
 ```
 Dari hasil deteksi, terdapat **43 outlier** yang tersebar di berbagai fitur. Hal ini menandakan perlunya penanganan lebih lanjut agar model clustering tidak terdistraksi oleh data ekstrem.  
-**(Tingkat kepercayaan: 100%)**
+
 
 ## Visualisasi Outlier - Boxplot
 Untuk **visualisasi outlier**, digunakan plot **boxplot** untuk masing-masing fitur. Ini membantu mengidentifikasi nilai-nilai yang menyimpang secara visual.
@@ -76,7 +76,7 @@ Untuk **visualisasi outlier**, digunakan plot **boxplot** untuk masing-masing fi
 plt.boxplot(...)
 ```
 Terlihat dengan jelas bahwa beberapa fitur memiliki titik-titik di luar whisker boxplot yang mengindikasikan outlier.  
-**(Tingkat kepercayaan: 100%)**
+
 
 ## Winsorization
 Karena jumlah data relatif kecil (440 baris), maka kami **tidak membuang outlier**, melainkan menggunakan metode **winsorization**. Winsorization mengubah nilai ekstrem menjadi nilai percentile ke-5 dan ke-95.
@@ -86,7 +86,7 @@ def winsorize(data, lower_percent=5, upper_percent=95):
     ...
 ```
 Dengan cara ini, data tetap dipertahankan dan efek dari outlier dapat diminimalkan.  
-**(Tingkat kepercayaan: 100%)**
+
 
 ## Visualisasi Setelah Winsorization
 Boxplot ditampilkan kembali setelah proses winsorization untuk melihat bagaimana distribusi data berubah.
@@ -95,7 +95,7 @@ Boxplot ditampilkan kembali setelah proses winsorization untuk melihat bagaimana
 plt.boxplot(..., data=winsorized_data)
 ```
 Distribusi menjadi lebih stabil dan outlier tidak lagi mendominasi secara visual.  
-**(Tingkat kepercayaan: 100%)**
+
 
 ## Normalisasi Min-Max
 Langkah selanjutnya adalah **normalisasi skala data** menggunakan metode **min-max scaler**. Ini dilakukan agar semua fitur memiliki rentang nilai yang sama (0-1) sehingga tidak ada fitur yang mendominasi proses clustering.
@@ -105,7 +105,7 @@ def min_max_scale(data):
     ...
 ```
 Langkah ini sangat penting dalam K-Means karena algoritma ini sensitif terhadap skala data.  
-**(Tingkat kepercayaan: 100%)**
+
 
 ## Implementasi K-Means Clustering
 Setelah preprocessing selesai, kita melanjutkan ke tahap utama yaitu penerapan algoritma **K-Means**. Di sini kita menggunakan pustaka `sklearn.cluster.KMeans`.
@@ -118,7 +118,7 @@ kmeans.fit(normalized_data)
 ```
 
 Kita memilih `n_clusters=3` sebagai jumlah klaster awal. Proses fitting dilakukan terhadap data yang telah dinormalisasi.  
-**(Tingkat kepercayaan: 100%)**
+
 
 ---
 
@@ -131,7 +131,7 @@ print(kmeans.cluster_centers_)
 ```
 
 Label digunakan untuk mengelompokkan masing-masing data ke dalam klaster tertentu, sedangkan pusat klaster menunjukkan koordinat dari masing-masing klaster di ruang fitur.  
-**(Tingkat kepercayaan: 100%)**
+
 
 ---
 
@@ -144,7 +144,7 @@ from sklearn.decomposition import PCA
 ```
 
 Visualisasi ini memudahkan dalam melihat pola klaster meskipun ada informasi yang hilang karena reduksi dimensi. Warna berbeda menunjukkan anggota dari klaster yang berbeda.  
-**(Tingkat kepercayaan: 100%)**
+
 
 ---
 
@@ -160,7 +160,7 @@ for k in range(1, 11):
 ```
 
 Grafik Elbow akan menunjukkan titik tekukan yang menandakan jumlah klaster optimal (biasanya nilai `k` sebelum perubahan inertia menjadi datar).  
-**(Tingkat kepercayaan: 100%)**
+
 
 ---
 
@@ -177,5 +177,19 @@ for i in range(3):
 ```
 
 Hasil ini membantu memahami karakteristik tiap klaster, misalnya klaster 0 mungkin adalah pelanggan dengan pembelian tinggi pada Grocery dan Detergents_Paper.  
-**(Tingkat kepercayaan: 100%)**
 
+
+# Tambahkan bagian penjelasan DBSCAN ke README
+
+dbscan_section = """
+---
+
+## Clustering Alternatif: DBSCAN
+Selain K-Means, kita juga mencoba algoritma **DBSCAN (Density-Based Spatial Clustering of Applications with Noise)** dari pustaka `sklearn.cluster`. DBSCAN tidak memerlukan penentuan jumlah klaster sejak awal, dan cocok untuk data dengan bentuk klaster yang tidak reguler serta dapat mengenali noise (outlier).
+
+```python
+from sklearn.cluster import DBSCAN
+
+dbscan = DBSCAN(eps=0.5, min_samples=5)
+dbscan.fit(normalized_data)
+```
